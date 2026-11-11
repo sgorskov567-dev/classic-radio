@@ -197,7 +197,7 @@ const G=[
 
 function start(i,s){
   init();stop();cur=i;if(s!==undefined){stn=s;tune();newTrack()}TR=ST[i][stn][1];BM=ST[i][stn][2];playing=true;mediaOn();
-  const u=ST[i][stn][3]||G[i].url;if(u){aud.src=u;aud.play().catch(()=>{});}
+  const u=ST[i][stn][3]||G[i].url;if(u){aud.src=u;aud.volume=vol;aud.play().catch(()=>{});}
   else{
     bus.frequency.value=G[i].lp;ctx.resume();step=0;nextT=ctx.currentTime+.08;
     timer=setInterval(()=>{while(nextT<ctx.currentTime+.25){G[i].step(step,nextT);nextT+=60/(G[i].bpm*BM)/4;step++}},50);
@@ -221,7 +221,7 @@ const ST=[
  [["Neon Drive",0,1],["Night Pulse",2,1.06],["Deep Grid",-3,.97]],
  [["Garage Days",0,1],["Highway",2,1.08],["Basement Show",-2,.94]],
  [["Drift",0,1],["Aurora",3,1],["Deep Sea",-4,.9]],
- [["Boom Bap 90s",0,1],["Golden Era",-2,.93],["Y2K Beats",3,1.06]]
+ [["Boom Bap 90s",0,1],["181.FM Old School",-2,.93,"https://listen.181fm.com/181-oldschool_128k.mp3"],["Y2K Beats",3,1.06]]
 ];
 let gsel=0,favs=[];
 try{favs=JSON.parse(localStorage.getItem("rc-fav")||"[]")}catch(e){}
@@ -238,7 +238,7 @@ const ART=[["Moon Cassette","Kiro & the Rain","Soft Static","Nori Bloom","Tape G
 let trk="",trkEnd=0;
 function newTrack(){
   const A=["Midnight","Velvet","Paper","Slow","Blue","Faded","Golden","Quiet","Neon","Lost","Last","Summer"],N=["Rain","Coffee","Window","Train","Skyline","Letters","Echo","Harbor","Dream","Smoke","Drive","Fire"];
-  trk=pick(A)+" "+pick(N)+" · "+pick(ART[cur]);trkEnd=Date.now()+(60+Math.random()*60)*1000;mediaMeta();
+  trk=ST[cur][stn][3]?"Прямой эфир · 181.FM":pick(A)+" "+pick(N)+" · "+pick(ART[cur]);trkEnd=Date.now()+(60+Math.random()*60)*1000;mediaMeta();
 }
 function rand(){const f=Math.floor(Math.random()*G.length*3);start(f/3|0,f%3);scr="now";render()}
 function toggleFav(){if(cur<0)return;const f=cur*3+stn,k=favs.indexOf(f);k<0?favs.push(f):favs.splice(k,1);try{localStorage.setItem("rc-fav",JSON.stringify(favs))}catch(x){}if(scr==="favs")sel=Math.max(0,Math.min(sel,favs.length-1));render()}
